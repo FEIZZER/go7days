@@ -7,7 +7,7 @@ replace fei => ./fei
 require (
 	fei v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.6.1
-	go.mongodb.org/mongo-driver v1.11.2
+	go.mongodb.org/mongo-driver v1.11.3
 )
 
 require (
