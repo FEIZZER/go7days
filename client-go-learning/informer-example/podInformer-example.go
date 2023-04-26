@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic/dynamicinformer"
 	"k8s.io/client-go/informers"
@@ -17,7 +18,6 @@ func PodInformerSimple() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("succeed in informer\n")
 	informerFactory := informers.NewSharedInformerFactory(clientSet, 5*time.Second)
 	podInformer := informerFactory.Core().V1().Pods().Informer()
 	podInformer.AddEventHandler(&cache.ResourceEventHandlerFuncs{
@@ -39,7 +39,7 @@ func PodInformerSimple() {
 
 var (
 	podResources = schema.GroupVersionResource{
-		Group:    "core",
+		Group:    "",
 		Version:  "v1",
 		Resource: "pods",
 	}
@@ -54,8 +54,8 @@ func PodInformerDynamic() {
 	podInformer := dynamicInformerFactory.ForResource(podResources).Informer()
 	podInformer.AddEventHandler(&cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			podObj := obj.(*v1.Pod).DeepCopy()
-			fmt.Printf("get a new pod:%+v \n", podObj)
+			cm := obj.(*unstructured.Unstructured)
+			fmt.Printf("Informer event: Pod ADDED %s/%s\n", cm.GetNamespace(), cm.GetName())
 		},
 		UpdateFunc: nil,
 		DeleteFunc: nil,
