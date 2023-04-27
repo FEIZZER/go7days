@@ -3,6 +3,8 @@ package getClient
 import (
 	"client-go-learning/getConfig-example"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -36,4 +38,28 @@ func NewClientSet() (*kubernetes.Clientset, error) {
 		return nil, err
 	}
 	return clientSet, nil
+}
+
+func NewDiscoveryClient() (*discovery.DiscoveryClient, error) {
+	config, err := getConfig.GetKubernetesConfig("")
+	if err != nil {
+		return nil, err
+	}
+	discoveryClient, err := discovery.NewDiscoveryClientForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	return discoveryClient, nil
+}
+
+func NewDynamicClient() (*dynamic.DynamicClient, error) {
+	config, err := getConfig.GetKubernetesConfig("")
+	if err != nil {
+		return nil, err
+	}
+	dynamicClient, err := dynamic.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	return dynamicClient, nil
 }

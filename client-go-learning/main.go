@@ -20,5 +20,5 @@ package main
 import "client-go-learning/getClient-example"
 
 func main() {
-	getClient.RESTClientUsage()
+	getClient.DynamicClientUsage()
 }
