@@ -23,18 +23,20 @@ func PodInformerSimple() {
 	podInformer.AddEventHandler(&cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			podObject := obj.(*v1.Pod).DeepCopy()
-			fmt.Printf("get a new pod: %+v\n", podObject)
+			fmt.Printf("get a new pod: %+v\n", podObject.Name)
 		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			newPodObj := newObj.(*v1.Pod).DeepCopy()
-			oldPodObj := oldObj.(*v1.Pod).DeepCopy()
-			fmt.Printf("a pod update from %+v to %+v \n", oldPodObj, newPodObj)
-		},
+		UpdateFunc: nil,
 		DeleteFunc: nil,
 	})
 	ctx := context.TODO()
 	podInformer.Run(ctx.Done())
-	cache.WaitForCacheSync(ctx.Done(), podInformer.HasSynced)
+	cache.WaitForCacheSync(context.Background().Done(), podInformer.HasSynced)
+}
+func showHasSync(cancel context.CancelFunc, podInformer cache.SharedIndexInformer) {
+	fmt.Printf("hassync1:%+v \n", podInformer.HasSynced())
+	time.Sleep(10 * time.Second)
+	fmt.Printf("hassync2:%+v \n", podInformer.HasSynced())
+	cancel()
 }
 
 var (

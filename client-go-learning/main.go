@@ -17,8 +17,12 @@ limitations under the License.
 // Note: the example only works with the code within the same release/branch.
 package main
 
-import "client-go-learning/getClient-example"
+import (
+	"client-go-learning/informer-example"
+	"time"
+)
 
 func main() {
-	getClient.DynamicClientUsage()
+	informer.PodInformerSimple()
+	time.Sleep(10 * time.Minute)
 }
